@@ -11,6 +11,7 @@ cd "$TARGET"
 git init -q -b main
 git config user.name "Setup Script"
 git config user.email "setup@example.test"
+git config core.autocrlf false
 : > "$EXPECTED"
 
 as_user() {
