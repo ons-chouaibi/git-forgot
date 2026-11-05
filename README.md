@@ -43,3 +43,7 @@ git gc --prune=now
 
 This only cleans your copy. Once pushed, revoking the secret is the only real fix.
 
+## Credential note
+
+The Hugging Face token note is in [notes/huggingface.md](notes/huggingface.md).
+
