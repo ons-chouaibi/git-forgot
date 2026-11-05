@@ -1,0 +1,4 @@
+# generated test repos, never committed
+leaky-repo/
+__pycache__/
+*.pyc
