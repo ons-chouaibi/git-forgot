@@ -2,3 +2,4 @@
 leaky-repo/
 __pycache__/
 *.pyc
+setup/expected.jsonl
