@@ -1,0 +1,15 @@
+{"scenario":"S01","type":"aws","fingerprint":"a65de5c3d9117717f27f2b2b34d1921ac5d832ba1082810d675f816ea5f32ad6","expected":"current_tree"}
+{"scenario":"S02","type":"aws","fingerprint":"5c39c475dedba631628b78c6ab1645c159b39dcbb8f57bf179c8064162c95a4c","expected":"history"}
+{"scenario":"S03","type":"github","fingerprint":"1960fb429a8be689c9f8cd1e9896ab218712d15fbf5b212a9c712f7187a89b78","expected":"reflog_only"}
+{"scenario":"S04","type":"github","fingerprint":"bb4b93cf88a02f9edd1f6c8ae1a6eaad31c9ff815a071a44f7d2263ac7305bbe","expected":"reflog_only"}
+{"scenario":"S05","type":"privkey","fingerprint":"340addaf6567fec1fb496623a4f3785eeea9027647aca4289475b400dee031bc","expected":"reflog_only"}
+{"scenario":"S06","type":"github","fingerprint":"fb9e4f7c5424d7703f0e0dc2250e420e1c507a5ccefff08c5d997d451fefd5cb","expected":"unreachable"}
+{"scenario":"S07","type":"aws","fingerprint":"c21784ed1d32a857e3b333ec15dd6bf2727a31345fdcc9bb8696f96834bf044a","expected":"unreachable"}
+{"scenario":"S08","type":"privkey","fingerprint":"e6426eb904612a6b43c193ccb5f45827f208b01c7952ca51cae83cf48e95dc62","expected":"history"}
+{"scenario":"S09","type":"github","fingerprint":"2ad9cc55a9bac30af6faedc521f0224c795112cf197e1d48c2cb5a43ca728318","expected":"history","pushed":true}
+{"scenario":"N01","type":"github","fingerprint":"6f609f06e36521893600d52742031db3392e7f8b6a364336e91738f7f695798e","expected":"none"}
+{"scenario":"S10","type":"github","fingerprint":"5a9bf20e98fa4c448aac80f857c2b2ae9c6707a9fd1e1a00f4357068ef933675","expected":"history"}
+{"scenario":"S11","type":"aws","fingerprint":"4980f8cdc0e1276b7e5025707318883a463883118427ee23d12a324c0b855f82","expected":"history"}
+{"scenario":"S12a","type":"github","fingerprint":"f5bab0bf73cf91d52b0ccc021ecdbca964cb33a7b3b0d9bbd6b06cbf124409af","expected":"history"}
+{"scenario":"S12b","type":"privkey","fingerprint":"6ed033394a2e025e17696c4c2d1e1f5ae25b5a1bc4da6de2ba2555844a8c3185","expected":"history"}
+{"scenario":"N02","type":"github","fingerprint":"c354dadb7f14f2c0f6c67162807ca1c41480d7940af139610f2c892bd477b58a","expected":"none"}
