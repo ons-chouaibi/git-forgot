@@ -22,6 +22,18 @@ as_user() {
   "$@"
 }
 
+# CRC32 of the token body in 6 base62 digits. The gzip trailer holds the CRC32.
+github_checksum() {
+  local alphabet="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+  local crc out="" i
+  crc=$(printf '%s' "$1" | gzip -c | tail -c 8 | od -An -tu4 -N4 | tr -d ' ')
+  for i in 1 2 3 4 5 6; do
+    out="${alphabet:crc%62:1}$out"
+    crc=$((crc / 62))
+  done
+  echo "$out"
+}
+
 fake_secret() {
   local r
   r=$(head -c 512 /dev/urandom | base64 | tr -dc 'A-Za-z0-9')
@@ -31,7 +43,8 @@ fake_secret() {
       echo "AKIA${u:0:16} ${r:100:40}"
       ;;
     github)
-      echo "ghp_${r:200:36}"
+      local body="${r:200:30}"
+      echo "ghp_${body}$(github_checksum "$body")"
       ;;
     privkey)
       local dir
@@ -124,12 +137,61 @@ s06_dropped_stash() {
   record S06 github "$v" unreachable
 }
 
+record_pushed() {
+  local fp
+  fp=$(printf '%s' "$3" | sha256sum | cut -d' ' -f1)
+  printf '{"scenario":"%s","type":"%s","fingerprint":"%s","expected":"%s","pushed":true}\n' "$1" "$2" "$fp" "$4" >> "$EXPECTED"
+}
+
+s07_staged_only() {
+  local id key
+  read -r id key <<< "$(fake_secret aws)"
+  printf 'AWS_ACCESS_KEY_ID=%s\nAWS_SECRET_ACCESS_KEY=%s\n' "$id" "$key" > staged.env
+  git add staged.env
+  git reset -q -- staged.env
+  rm staged.env
+  record S07 aws "$id" unreachable
+}
+
+s08_filter_branch() {
+  local v
+  v=$(fake_secret privkey)
+  printf '%s\n' "$v" > id_backup
+  git add id_backup
+  as_user "Grace Ops" "grace@example.test" "2026-10-08T10:00:00+02:00" git commit -q -m "Add backup key"
+  as_user "Grace Ops" "grace@example.test" "2026-10-08T11:00:00+02:00" \
+    env FILTER_BRANCH_SQUELCH_WARNING=1 \
+    git filter-branch --prune-empty --index-filter 'git rm -q --cached --ignore-unmatch id_backup' -- main > /dev/null
+  record S08 privkey "$v" history
+}
+
+# Orphan branch: pushing from main would also mark S01 and S02 as pushed.
+s09_pushed() {
+  local v remote
+  v=$(fake_secret github)
+  remote="$PWD-remote.git"
+  rm -rf "$remote"
+  git init -q --bare "$remote"
+  git remote add origin "$remote"
+  git switch -q --orphan release/ci
+  printf 'deploy_token=%s\n' "$v" > release.cfg
+  git add release.cfg
+  as_user "Heidi Ops" "heidi@example.test" "2026-10-09T10:00:00+02:00" git commit -q -m "Add release config"
+  git push -q origin release/ci
+  git switch -q main
+  git branch -q -D release/ci
+  record_pushed S09 github "$v" history
+}
+
 s01_present
 s02_deleted_file
 s03_amend
 s04_rebase
 s05_deleted_branch
 s06_dropped_stash
+s07_staged_only
+s08_filter_branch
+s09_pushed
 
 echo "Test repo ready at: $TARGET"
 echo "Expected findings: $EXPECTED"
